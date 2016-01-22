@@ -11,6 +11,10 @@ defmodule SlackEx.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+
+    scope "/api", SlackEx.Api, as: :api do
+      get "/ping", PingController, :show
+    end
   end
 
   scope "/", SlackEx do
