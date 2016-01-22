@@ -17,3 +17,6 @@ config :slackex, SlackEx.Repo,
   database: "slackex_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
+
+config :slackex, :webhook,
+  ping: "test-token"

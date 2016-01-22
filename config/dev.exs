@@ -41,3 +41,6 @@ config :slackex, SlackEx.Repo,
   database: "slackex_dev",
   hostname: "localhost",
   pool_size: 10
+
+config :slackex, :webhook,
+  ping: "test"
