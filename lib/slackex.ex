@@ -11,6 +11,9 @@ defmodule SlackEx do
       supervisor(SlackEx.Endpoint, []),
       # Start the Ecto repository
       supervisor(SlackEx.Repo, []),
+
+      supervisor(SlackEx.Notification.Supervisor, []),
+
       # Here you could define other workers and supervisors as children
       # worker(SlackEx.Worker, [arg1, arg2, arg3]),
       worker(SlackEx.Bot.GithubStatus, [])

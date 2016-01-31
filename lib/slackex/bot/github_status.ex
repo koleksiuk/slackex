@@ -8,6 +8,7 @@ defmodule SlackEx.Bot.GithubStatus do
 
   @interval 5000
   @url "https://status.github.com/api/status.json"
+  @hook_url "https://hooks.slack.com/services/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"
 
   def status do
     GenServer.call(__MODULE__, :status)
@@ -24,25 +25,26 @@ defmodule SlackEx.Bot.GithubStatus do
     {:reply, status, state}
   end
 
-  def handle_info(:check_status, state = %{ url: url }) do
-    status = check_status
+  def handle_info(:check_status, state = %{ status: current_status, url: url }) do
+    status = check_github_status(current_status)
 
     {:noreply, Map.put(state, :status, status)}
   end
 
-  defp check_status do
-    status = case fetch_status do
-      "good" ->
-        :ok
-      "minor" ->
-        :warn
-      "major" ->
-        :error
+  defp check_github_status(current_status) do
+    new_status = case fetch_status do
+      "good" -> :ok
+      "minor" -> :warn
+      "major" -> :error
     end
 
-    Logger.debug "#{__MODULE__}: #{status}"
+    case current_status do
+      nil -> new_status_notification(new_status)
+      new_status -> nil
+      _ -> new_status_notification(new_status)
+    end
 
-    status
+    new_status
   end
 
   defp fetch_status do
@@ -54,5 +56,10 @@ defmodule SlackEx.Bot.GithubStatus do
   defp fetch_response do
     @url
     |> HTTPoison.get!
+  end
+
+  defp new_status_notification(new_status) do
+    Logger.debug("#{__MODULE__}: New status: #{new_status}")
+    :ok = SlackEx.Notification.process("New status: #{new_status}")
   end
 end

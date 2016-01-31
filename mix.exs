@@ -38,7 +38,8 @@ defmodule SlackEx.Mixfile do
      {:gettext, "~> 0.9"},
      {:cowboy, "~> 1.0"},
      {:httpoison, "~> 0.8"},
-     {:poison, "~> 1.3"}
+     {:poison, "~> 1.3"},
+     {:poolboy, "~> 1.0"}
    ]
   end
 
